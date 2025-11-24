@@ -3,6 +3,13 @@
 #include "models/staffAccount.hpp"
 #include <iostream>
 #include <vector>
+#define RESET   "\033[0m"
+#define BLUE   "\033[34m"
+#define GREEN   "\033[32m"
+#define CYAN    "\033[36m"
+#define YELLOW  "\033[33m"
+#define RED     "\033[31m"
+#define BOLD    "\033[1m"
 // #include <tabulate/table.hpp>
 
 using namespace std;
@@ -123,7 +130,7 @@ void showAllStaff(){
     vector<User> users = readExcelFromStaffInfoToVector(filename);
 
     system("cls");
-    cout << "========== ALL STAFF ACCOUNTS ==========\n\n";
+    cout << BLUE << BOLD << "========== ALL STAFF ACCOUNTS ==========\n\n" <<RESET;
 
     if(users.empty()){
         cout << "No staff accounts found!\n";

@@ -149,6 +149,21 @@ int main(){
                     if(option == 0){
                         break;
                     }
+                    switch(option){ 
+                        case 1: {
+                            showMenu();
+                            break;
+                        }
+                        case 2: {
+                            // show receipt;
+                            break;
+
+                        }
+                        default :{
+                            break;
+                        }
+                         
+                    }
                 }
                 break;
             }
