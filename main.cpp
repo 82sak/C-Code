@@ -120,8 +120,6 @@ int main(){
                                             showAllStaff();
                                             break;
                                         }
-                                        
-                                    
                                         default:
                                             break;
                                     }
@@ -148,6 +146,7 @@ int main(){
                                     }
                                     case 2:{
                                         // 1week
+                                        showSummaryOneWeek();
                                         break;
                                     }
                                     case 3:{
@@ -234,6 +233,7 @@ int main(){
                                     case 2:{
                                         // drink
                                         displayDrink();
+                                        break;
                                     }
                                     
                                     default:

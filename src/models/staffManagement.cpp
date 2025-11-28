@@ -3,6 +3,7 @@
 #include "models/staffAccount.hpp"
 #include <iostream>
 #include <vector>
+#include <conio.h>
 // #include <tabulate/table.hpp>
 
 using namespace std;
@@ -108,16 +109,6 @@ void deleteStaffAccount(){
     writeExcelToStaffInfo(filename, users);
 }
 
-// void showAllStaff(const vector<User> &users){
-//     Table table;
-//     table.add_row({"Staff's Account Name","fullName", "Gender", "Age"});
-//     for(const auto &user : users){
-//         table.add_row({user.getUserName(), user.getUserFullName(), user.getUserGender(), to_string(user.getUserAge())});
-//     }
-//     table[0].format().font_style({FontStyle::bold});
-//     cout << table << endl;
-// };
-
 void showAllStaff(){
     string filename = "../../data/staffInfo.xlsx";
     vector<User> users = readExcelFromStaffInfoToVector(filename);
@@ -145,6 +136,32 @@ void showAllStaff(){
     cin.get();
 }
 
+inline string maskingPassword(){
+    string password = "";
+    char ch;
+    
+    while (true) {
+        ch = _getch(); 
+        
+        if (ch == 13) { 
+            cout << endl;
+            break;
+        }
+        else if (ch == 8) {
+            if (!password.empty()) {
+                password.pop_back(); 
+                cout << "\b \b"; 
+            }
+        }
+        else {
+            password += ch;  
+            cout << '*'; 
+        }
+    }
+    
+    return password;
+}
+
 bool staffAuth() {
     string filename = "../../data/staffInfo.xlsx";
     vector<User> users = readExcelFromStaffInfoToVector(filename);
@@ -163,9 +180,9 @@ bool staffAuth() {
         cout << "Enter Username: ";
         getline(cin, userName);
         cout << "Enter Password: ";
-        getline(cin, userPass);
+        // getline(cin, userPass);
+        userPass = maskingPassword();
         
-        // Check if credentials match any staff
         bool found = false;
         for(const auto &user : users) {
             if(user.getUserName() == userName && user.getUserPass() == userPass) {
@@ -174,11 +191,10 @@ bool staffAuth() {
                 cout << "Welcome, " << user.getUserFullName() << "!\n";
                 cout << "Press Enter to continue...";
                 cin.get();
-                return true;  // Login successful
+                return true;
             }
         }
         
-        // If not found
         if(!found) {
             attempts--;
             if(attempts > 0) {
@@ -194,5 +210,5 @@ bool staffAuth() {
         }
     }
     
-    return false;  // Login failed after 3 attempts
+    return false;
 }

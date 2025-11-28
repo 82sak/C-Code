@@ -59,12 +59,9 @@ void displayFood(){
             if(product.getItemCategory() == food){
                 cout << "[" << count << "]" <<"    Product Name : " << product.getItemName() << endl;
                 cout << "    Product Price : " << product.getItemPrice() << endl;
-                // cout << "    Product Amount : " << product.getItemAmount() << endl;
-                // cout << "    Product Category : " << product.getItemCategory() << endl;
                 count++;
             }
         }
-        // cout << "Total Product : " << products.size() << endl;
     }
 
     string orderItem;
@@ -116,12 +113,9 @@ void displayDrink(){
             if(product.getItemCategory() == drink){
                 cout << "[" << count << "]" <<"    Product Name : " << product.getItemName() << endl;
                 cout << "    Product Price : " << product.getItemPrice() << endl;
-                // cout << "    Product Amount : " << product.getItemAmount() << endl;
-                // cout << "    Product Category : " << product.getItemCategory() << endl;
                 count++;
             }
         }
-        // cout << "Total Product : " << products.size() << endl;
     }
 
     string orderItem;
@@ -156,12 +150,12 @@ void displayDrink(){
     }
 }
 
-string getCurrentTimestamp() {
+inline string getCurrentTimestamp() {
     auto now = chrono::system_clock::now();
     time_t now_time = chrono::system_clock::to_time_t(now);
     
     stringstream ss;
-    ss << put_time(localtime(&now_time), "%Y-%m-%d %H-%M-%S");
+    ss << put_time(localtime(&now_time), "%Y-%m-%d %H:%M:%S");
     return ss.str();
 }
 
@@ -199,7 +193,6 @@ void displayCart(){
         }
         switch(option){
             case 1:{
-                // Remove item from cart
                 string deleteItem;
 
                 cin.ignore();
@@ -220,10 +213,10 @@ void displayCart(){
                 if(!found){
                     cout << "Item not found";
                 }
-                break;
+                cond = false;
+            break;
             }
             case 2:{
-                // confirm order and store in excel
                 string filename = "../../data/orderInfo.xlsx";
                 vector<Order> orders  = readExcelFromOrderInfoToVector(filename);
 
@@ -248,8 +241,8 @@ void displayCart(){
                 orderPrice.clear();
                 orderAmount.clear();
                 orderCategory.clear();
-                cout << "\n✓ Order placed successfully!\n";
-                cout << "✓ Order time: " << timestamp << "\n";  // ← Show timestamp
+                cout << "\n Order placed successfully!\n";
+                cout << "✓ Order time: " << timestamp << "\n";
                 cout << "Thank you for your order!\n";
                 cond = false;
                 break;

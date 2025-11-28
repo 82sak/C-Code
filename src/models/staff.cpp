@@ -71,16 +71,14 @@ void showReceipt() {
     int transactionNum = 0;
     
     for(const auto &order : orders) {
-        // Check if this is a new transaction (different timestamp)
+
         if(order.getItemOrderTimestamp() != currentTimestamp) {
-            // Print previous transaction total (if not first)
             if(!currentTimestamp.empty()) {
                 cout << "    -----------------------------------\n";
                 cout << "    Transaction Total: $" << transactionTotal << "\n";
                 cout << "========================================\n\n";
             }
             
-            // Start new transaction
             transactionNum++;
             currentTimestamp = order.getItemOrderTimestamp();
             transactionTotal = 0;
@@ -90,7 +88,6 @@ void showReceipt() {
             cout << "----------------------------------------\n";
         }
         
-        // Display item in this transaction
         float subtotal = order.getItemOrderPrice() * order.getItemOrderAmount();
         transactionTotal += subtotal;
         
@@ -101,7 +98,6 @@ void showReceipt() {
              << " = $" << subtotal << "\n";
     }
     
-    // Print last transaction total
     if(!currentTimestamp.empty()) {
         cout << "    -----------------------------------\n";
         cout << "    Transaction Total: $" << transactionTotal << "\n";

@@ -1,8 +1,14 @@
 #include "models/menuManagement.hpp"
 #include "models/menuInfo.hpp"
 #include "models/excelUtils.hpp"
+#include "models/menu.hpp"
 #include <iostream>
 #include <vector>
+#include <chrono>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
+#include <conio.h>
 
 using namespace std;
 
@@ -134,6 +140,31 @@ void showAllProduct(){
     cin.get();
 }
 
+string maskingPassword(){
+    string password = "";
+    char ch;
+    
+    while (true) {
+        ch = _getch();  // Read character without displaying it
+        
+        if (ch == 13) {  // Enter key (ASCII 13)
+            cout << endl;
+            break;
+        }
+        else if (ch == 8) {  // Backspace key (ASCII 8)
+            if (!password.empty()) {
+                password.pop_back();  // Remove last character
+                cout << "\b \b";  // Move back, print space, move back again
+            }
+        }
+        else {
+            password += ch;  // Add character to password
+            cout << '*';     // Display asterisk
+        }
+    }
+    
+    return password;
+}
 bool adminAuth(){
     int attempts = 3;
     
@@ -149,9 +180,9 @@ bool adminAuth(){
         cout << "Enter Username: ";
         getline(cin, userName);
         cout << "Enter Password: ";
-        getline(cin, userPass);
+        // getline(cin, userPass);
+        userPass = maskingPassword();
         
-        // Check if credentials match any staff
         bool found = false;
         if(userName == "admin" && userPass == "password"){
             found = true;
@@ -166,7 +197,7 @@ bool adminAuth(){
                 cout << "\n Invalid username or password!\n";
                 cout << "Attempts remaining: " << attempts << "\n";
                 cout << "Press Enter to try again...";
-                cin.get();
+                cin.ignore();
             } else {
                 cout << "\n Login failed! No attempts remaining.\n";
                 cout << "Press Enter to return...";
@@ -176,25 +207,102 @@ bool adminAuth(){
     }
     return false;
 }
+string getCurrentTimestamp() {
+    auto now = chrono::system_clock::now();
+    time_t now_time = chrono::system_clock::to_time_t(now);
+    
+    stringstream ss;
+    ss << put_time(localtime(&now_time), "%Y-%m-%d %H:%M:%S");
+    return ss.str();
+}
 
 void showSummaryOneDay(){
     string filename = "../../data/orderInfo.xlsx";
     vector<Order> orders  = readExcelFromOrderInfoToVector(filename);
     
     system("cls");
-    cout << "===== 1 day =====\n";
-
+    cout << "========== RECENT ORDERS ==========\n\n";
     
-    for(const auto &order : orders){
-        cout << order.getItemOrderTimestamp();
-        if(order.getItemOrderTimestamp() == "2025-11-27"){
-            cout << order.getItemOrderTimestamp();
-            break;
+    if(orders.empty()) {
+        cout << "No orders!\n";
+        cin.get();
+        return;
+    }
+    
+    string today = getCurrentTimestamp().substr(0, 10);
+    
+    auto yesterday_time = chrono::system_clock::now() - chrono::hours(24);
+    time_t yesterday_time_t = chrono::system_clock::to_time_t(yesterday_time);
+    stringstream ss;
+    ss << put_time(localtime(&yesterday_time_t), "%Y-%m-%d");
+    string yesterday = ss.str();
+    
+    cout << "From " << yesterday << " to " << today << "\n\n";
+    
+    int count = 0;
+    float total = 0;
+    
+    for(const auto &order : orders) {
+        string orderDate = order.getItemOrderTimestamp().substr(0, 10);
+        
+        if(orderDate == yesterday || orderDate == today) {
+            count++;
+            float price = order.getItemOrderPrice() * order.getItemOrderAmount();
+            total += price;
+            
+            cout << count << ". " << order.getItemOrderName() 
+                 << " - $" << price 
+                 << " (" << order.getItemOrderTimestamp() << ")\n";
         }
     }
-    cout << "\nPress Enter to continue...";
+    
+    cout << "\nTotal: " << count << " orders, $" << total << "\n";
+    cout << "\nPress Enter...";
     cin.ignore();
     cin.get();
 }
-void showSummaryOneWeek();
-void showSummaryOneMonth();
+void showSummaryOneWeek(){
+    string filename = "../../data/orderInfo.xlsx";
+    vector<Order> orders  = readExcelFromOrderInfoToVector(filename);
+    
+    system("cls");
+    cout << "========== RECENT ORDERS ==========\n\n";
+    
+    if(orders.empty()) {
+        cout << "No orders!\n";
+        cin.get();
+        return;
+    }
+    
+    string today = getCurrentTimestamp().substr(0, 10);
+    
+    auto week_time = chrono::system_clock::now() - chrono::hours(168);
+    time_t week_time_t = chrono::system_clock::to_time_t(week_time);
+    stringstream ss;
+    ss << put_time(localtime(&week_time_t), "%Y-%m-%d");
+    string weekAgo = ss.str();
+    
+    cout << "From " << weekAgo << " to " << today << "\n\n";
+    
+    int count = 0;
+    float total = 0;
+    
+    for(const auto &order : orders) {
+        string orderDate = order.getItemOrderTimestamp().substr(0, 10);
+        
+        if(orderDate >= weekAgo || orderDate <= today) {
+            count++;
+            float price = order.getItemOrderPrice() * order.getItemOrderAmount();
+            total += price;
+            
+            cout << count << ". " << order.getItemOrderName() 
+                 << " - $" << price 
+                 << " (" << order.getItemOrderTimestamp() << ")\n";
+        }
+    }
+    
+    cout << "\nTotal: " << count << " orders, $" << total << "\n";
+    cout << "\nPress Enter...";
+    cin.ignore();
+    cin.get();
+};

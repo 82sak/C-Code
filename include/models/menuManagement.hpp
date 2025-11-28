@@ -7,4 +7,3 @@ void showAllProduct();
 bool adminAuth();
 void showSummaryOneDay();
 void showSummaryOneWeek();
-void showSummaryOneMonth();
