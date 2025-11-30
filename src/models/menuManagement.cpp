@@ -240,6 +240,7 @@ void showSummaryOneDay(){
     cout << "From " << yesterday << " to " << today << "\n\n";
     
     int count = 0;
+    float totalTax = 0;
     float total = 0;
     
     for(const auto &order : orders) {
@@ -248,7 +249,9 @@ void showSummaryOneDay(){
         if(orderDate == yesterday || orderDate == today) {
             count++;
             float price = order.getItemOrderPrice() * order.getItemOrderAmount();
+            float tax = (order.getItemOrderPrice() / 10) * order.getItemOrderAmount();
             total += price;
+            totalTax += tax;
             
             cout << count << ". " << order.getItemOrderName() 
                  << " - $" << price 
@@ -256,7 +259,9 @@ void showSummaryOneDay(){
         }
     }
     
-    cout << "\nTotal: " << count << " orders, $" << total << "\n";
+    cout << "\nSubTotal: $" << total << "\n";
+    cout << "Tax: $" << totalTax << "\n";
+    cout << "\nTotal: $" << total + totalTax << "\n";
     cout << "\nPress Enter...";
     cin.ignore();
     cin.get();
@@ -285,6 +290,7 @@ void showSummaryOneWeek(){
     cout << "From " << weekAgo << " to " << today << "\n\n";
     
     int count = 0;
+    float totalTax = 0;
     float total = 0;
     
     for(const auto &order : orders) {
@@ -293,7 +299,9 @@ void showSummaryOneWeek(){
         if(orderDate >= weekAgo || orderDate <= today) {
             count++;
             float price = order.getItemOrderPrice() * order.getItemOrderAmount();
+            float tax = (order.getItemOrderPrice() / 10) * order.getItemOrderAmount();
             total += price;
+            totalTax += tax;
             
             cout << count << ". " << order.getItemOrderName() 
                  << " - $" << price 
@@ -301,7 +309,9 @@ void showSummaryOneWeek(){
         }
     }
     
-    cout << "\nTotal: " << count << " orders, $" << total << "\n";
+    cout << "\nSubTotal: $" << total << "\n";
+    cout << "Tax: $" << totalTax << "\n";
+    cout << "\nTotal: $" << total + totalTax << "\n";
     cout << "\nPress Enter...";
     cin.ignore();
     cin.get();

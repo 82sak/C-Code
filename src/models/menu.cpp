@@ -165,6 +165,8 @@ void displayCart(){
 
     float price;
     float total = 0;
+    float tax;
+    float totalTax = 0;
     bool cond = true;
     if(orderName.empty()){
         cout << "Your cart is empty!";
@@ -175,10 +177,15 @@ void displayCart(){
             cout << "Price : " << orderPrice[i] << endl;
             cout << "Amount : " << orderAmount[i] << endl;
             cout << "============================\n";
+
+            tax = (orderPrice[i] / 10) * orderAmount[i];
             price = orderPrice[i] * orderAmount[i];
             total += price;
+            totalTax += tax;
         }
-        cout << " Total Price : $" << total << endl;
+        cout << " SubTotal Price : $" << total << endl;
+        cout << " Tax Price : $" << totalTax << endl;
+        cout << " Total Price : $" << total + totalTax << endl;
     }
 
     while(cond){
